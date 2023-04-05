@@ -1,9 +1,8 @@
-﻿namespace Contracts
+﻿namespace Contracts;
+
+public interface IRepositoryWrapper
 {
-    public interface IRepositoryWrapper
-    {
-        IOwnerRepository OwnerRepository { get; }
-        IAccountRepository AccountRepository { get; }
-        void Save();
-    }
+    IOwnerRepository OwnerRepository { get; }
+    IAccountRepository AccountRepository { get; }
+    void Save();
 }

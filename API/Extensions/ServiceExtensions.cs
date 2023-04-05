@@ -2,6 +2,7 @@
 using Contracts;
 using Entities;
 using Microsoft.EntityFrameworkCore;
+using Repository;
 
 namespace API.Extensions;
 
@@ -45,7 +46,7 @@ public static class ServiceExtensions
                 options.UseCosmos(accountEndpoint, new DefaultAzureCredential(), dataBaseName);
             });
         }
-        services.AddScoped<IRepositoryWrapper, IRepositoryWrapper>();
+        services.AddScoped<IRepositoryWrapper, RepositoryWrapper>();
     }
     public static void EnsureRepositoryContextDatabaseExist(this IHost host)
     {
