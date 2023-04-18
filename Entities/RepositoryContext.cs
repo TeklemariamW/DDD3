@@ -17,7 +17,11 @@ public class RepositoryContext : DbContext
         modelBuilder.Entity<Owner>()
             .ToContainer("Owners")
             .HasPartitionKey(ow => ow.OwnerId)
-            .OwnsMany(ac => ac.Accounts);
+            .HasMany(ac => ac.Accounts);
 
+        modelBuilder.Entity<Account>()
+            .ToContainer("Account")
+            .HasPartitionKey(ow => ow.AccountId)
+            .HasOne(o => o.Owner);
     }
 }

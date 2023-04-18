@@ -9,7 +9,7 @@ public class Account
     public Guid AccountId { get; set; }
 
     [Required(ErrorMessage = "Date created is required")]
-    public DateTime DateCreated { get; set; }
+    public DateTime DateCreated { get; set; } = DateTime.UtcNow;
 
     [Required(ErrorMessage = "Account type is required")]
     public string? AccountType { get; set; }

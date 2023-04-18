@@ -1,7 +1,9 @@
 ﻿using Azure.Identity;
 using Contracts;
 using Entities;
+using Entities.Models;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using Repository;
 
 namespace API.Extensions;
@@ -52,5 +54,19 @@ public static class ServiceExtensions
     {
         using IServiceScope serviceScope = host.Services.CreateScope();
         serviceScope.ServiceProvider.GetRequiredService<RepositoryContext>().Database.EnsureCreated();
+    }
+
+    public static void AddPaginationHeader<T>(this HttpResponse response, PagedList<T> items)
+    {
+        var metadata = new
+        {
+            items.TotalCount,
+            items.PageSize,
+            items.CurrentPage,
+            items.TotalPages,
+            items.HasNext,
+            items.HasPrevious,
+        };
+        response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metadata));
     }
 }

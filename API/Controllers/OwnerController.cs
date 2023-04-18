@@ -1,9 +1,9 @@
-﻿using AutoMapper;
+﻿using API.Extensions;
+using AutoMapper;
 using Contracts;
-using Entities.DTO;
+using Entities.DTOs.Owner;
 using Entities.Models;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
 
 namespace API.Controllers;
 
@@ -19,23 +19,19 @@ public class OwnerController : ControllerBase
         _mapper = mapper;
     }
     [HttpGet]
+    [ProducesResponseType(typeof(IEnumerable<OwnerDto>), 200)]
     public IActionResult GetAllOwners([FromQuery] OwnerParameters ownerParameters)
     {
+        if (!ownerParameters.ValidYearRange)
+        {
+            return BadRequest("Max year of birth cannot be less than min year of birth");
+        }
+
         try
         {
             var owners = _repository.OwnerRepository.GetAllOwners(ownerParameters);
 
-            var metadata = new
-            {
-                owners.TotalCount,
-                owners.PageSize,
-                owners.CurrentPage,
-                owners.TotalPages,
-                owners.HasNext,
-                owners.HasPrevious
-            };
-
-            Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metadata));
+            Response.AddPaginationHeader(owners);
 
             var OwnersResult = _mapper.Map<IEnumerable<OwnerDto>>(owners);
             return Ok(OwnersResult);
